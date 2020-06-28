@@ -10,7 +10,9 @@
                 </form>
             </div>
             <div>
-                <button mat-raised-button color="primary" class="header-button" *ngIf="workflow.isComplete || false">Shuffle</button>
+                <ng-template *ngIf="workflow">
+                    <button mat-raised-button color="primary" class="header-button" *ngIf="workflow.isComplete || false">Shuffle</button>
+                </ng-template>
                 <button mat-raised-button color="primary" class="header-button" (click)="deleteNode()">Delete</button>
                 <button mat-raised-button color="primary" class="header-button" (click)="openBottomSheet()"> + Add Node</button>
                 <button mat-raised-button color="primary" class="header-button" (click)="saveWorkflow()">Save</button>
@@ -18,7 +20,7 @@
         </div>
         <div class="workflows">
             <h2>Workflow</h2>
-            <div style="display: flex;" *ngIf="workflow.nodes.length > 0; else blankUI">
+            <div *ngIf="workflow.nodes.length > 0; else blankUI">
                 <div class="card" *ngFor="let item of workflow.nodes;let i = index">
                     <h3>{{item.name | titlecase}}</h3>
                     <h4>{{item.content}}</h4>

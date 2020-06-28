@@ -7,6 +7,7 @@ import { AppState } from '../app.state';
 import * as WorkflowActions from '../actions/workflow.actions';
 import { Store } from '@ngrx/store';
 import { Router, ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-workflow',
@@ -18,9 +19,9 @@ export class NewWorkflowComponent implements OnInit {
   private sub: any;
   workflow: workflow = {
     isComplete: false,
-    name: "t",
+    name: '',
     nodes: [],
-    stage: 'ts'
+    stage: ''
   };
 
   workflowForm = new FormGroup({
@@ -35,26 +36,30 @@ export class NewWorkflowComponent implements OnInit {
     this.sub = this.route.params.subscribe(params => {
       this.workflowIndex = +params['id'];
       if(!isNaN(+params['id'])){
-        $this.store.select('workflow').subscribe(data => {
-          var wfData = data.filter((ele,index) => {
+        $this.store.select('workflow').pipe(take(1)).subscribe(data => {
+          var wfD = data.filter((ele,index) => {
             if(index == +params['id'])
             {
                 return ele;
             }
           });
-          if(wfData.length){
-            $this.workflow = {
-              isComplete: wfData[0]["isComplete"],
-              name: wfData[0]["name"],
-              nodes: wfData[0]["nodes"],
-              stage: wfData[0]["stage"]
-            }
-            $this.workflowForm.controls['name'].setValue(wfData[0]["name"]);
+          let wfData = {...wfD[0]};
+          if(wfData){
+            $this.assignWorkflow(wfData);
           }
         });
       }
     });
+  }
 
+  assignWorkflow(wfData){
+    this.workflow = {
+      isComplete: wfData["isComplete"],
+      name: wfData["name"],
+      nodes: wfData["nodes"],
+      stage: wfData["stage"]
+    }
+    this.workflowForm.controls['name'].setValue(wfData["name"]);
   }
 
   openBottomSheet(formValue?): void {
@@ -62,11 +67,13 @@ export class NewWorkflowComponent implements OnInit {
      data: {data: formValue, closeOnNavigation: true}
     });
     bottomSheetRef.afterDismissed().subscribe(data => {
-      if(!formValue){
-        this.addNode(data);
-      }
-      else{
-        this.editNode(formValue,data);
+      if(data){
+        if(!formValue){
+          this.addNode(data);
+        }
+        else{
+          this.editNode(formValue,data);
+        }
       }
     });
   }
@@ -78,7 +85,8 @@ export class NewWorkflowComponent implements OnInit {
       name: data.name,
       state: 'pending'
     }
-    this.workflow.nodes = [...this.workflow.nodes, object];//.push(object);
+    this.workflow["nodes"] = [...this.workflow["nodes"], object];//.push(object);
+    console.log(this.workflow);
   }
 
   editNode(prevdata,newdata){
@@ -91,16 +99,42 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   changeState(item, index){
-      if(item.state == 'pending'){
-        this.workflow.nodes[index].state = 'In Progress';
+    console.log(this.workflow.nodes[index-1]);
+    let temp = [...this.workflow.nodes];
+    if(this.workflow.nodes[index-1]){
+      if(this.workflow.nodes[index-1].state == 'completed')
+      {
+        if(item.state == 'pending'){
+          this.workflow.nodes[index].state = 'In Progress';
+        }
+        else if(item.state == 'In Progress'){
+          this.workflow.nodes[index].state = 'completed';
+        }
+        else if(item.state == 'completed'){
+          this.workflow.nodes[index].state = 'pending';
+        }
+        this.checkIsComplete();
       }
-      else if(item.state == 'In Progress'){
-        this.workflow.nodes[index].state = 'completed';
+      else{
+        alert("Complete previous node");
       }
-      else if(item.state == 'completed'){
-        this.workflow.nodes[index].state = 'pending';
+    }
+    else{
+      if(item["state"] == 'pending'){
+        console.log("temppppp",item);
+        temp[index].state = 'In Progress';
+        console.log("temppppp",temp[index]);
+      }
+      else if(temp[index]["state"] == 'In Progress'){
+        temp[index]["state"] = 'completed';
+      }
+      else if(temp[index]["state"] == 'completed'){
+        temp[index]["state"] = 'pending';
       }
       this.checkIsComplete();
+    }
+    this.workflow.nodes = [...temp];
+     
   }
 
   checkIsComplete(){
@@ -158,6 +192,8 @@ export class formBottomSheet {
   });
 
   nodeFormSubmit(form){
-    this._bottomSheetRef.dismiss(form);
+    if(form.name && form.content){
+      this._bottomSheetRef.dismiss(form);
+    }
   }
 }

@@ -2,25 +2,28 @@
     <div class="container">
         <div class="workflow-header" style="display: flex;justify-content: space-between;">
             <div>
-                <mat-form-field appearance="outline">
-                    <mat-label>Search Workflow</mat-label>
-                    <input matInput placeholder="Placeholder">
-                    <mat-icon matSuffix>search</mat-icon>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-select placeholder="Filters">
-                      <mat-option value="all">All</mat-option>
-                      <mat-option value="completed">Completed</mat-option>
-                      <mat-option value="pending">Pending</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <form [formGroup]="searchForm" class="example-form" (ngSubmit)="searchSubmit(searchForm.value)">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Search Workflow</mat-label>
+                        <input matInput placeholder="Placeholder" formControlName = "search">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select placeholder="Filters" formControlName = "filter">
+                            <mat-option value="all">All</mat-option>
+                            <mat-option value="completed">Completed</mat-option>
+                            <mat-option value="pending">Pending</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button type="submit" mat-raised-button color="warn">Apply</button>
+                </form>
             </div>
             <button mat-raised-button color="primary" (click)="addWorkflow()" style="height: 50px;"> + Create Workflow</button>
         </div>
         <div class="workflows">
             <h2>Workflow list</h2>
-            <div style="display: flex;">
-                <div class="card" *ngFor="let item of workflows | async; let i = index">
+            <div *ngIf="workflows">
+                <div class="card" *ngFor="let item of workflows; let i = index">
                     <mat-icon color="warn" (click)="removeWorkflow(i)" style="cursor: pointer;float: right;font-size: 36px;" matSuffix>delete_forever</mat-icon>
                     <h3>{{item.name | titlecase}}</h3>
                     <h4>{{item.stage | titlecase}} <mat-icon [ngClass]="(item.stage =='pending') ? 'pending-icon':'completed-icon'" (click)="changeState(item)" matSuffix>check_circle</mat-icon></h4>
