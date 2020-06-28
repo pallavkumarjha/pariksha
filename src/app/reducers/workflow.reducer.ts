@@ -21,6 +21,11 @@ export function reducer(state : workflow[] = [initialWorkflow], action: Workflow
                 }
             });
             return state;
+        case WorkflowActions.EDIT_WORKFLOW:
+            let s = [...state];
+            s[action.payload.index] = {...action.payload.payload};
+            state = [...s];
+            return state;
         default:
             return state;
     }

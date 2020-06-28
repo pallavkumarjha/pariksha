@@ -40,16 +40,12 @@ export class WorkflowsComponent implements OnInit {
     this.router.navigate([`add-workflow`]);
   }
 
+  editWorkflow(index){
+    this.router.navigate([`add-workflow/${index}`]);
+  }
+
   removeWorkflow(index){
     console.log(index);
     this.store.dispatch(new WorkFlowActions.RemoveWorkflow(index));
-
   }
-
 }
-
-// export interface workflow {
-//   name: string;
-//   stage: string;
-//   canBeCompleted: boolean;
-// }

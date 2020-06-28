@@ -18,11 +18,11 @@
         </div>
         <div class="workflows">
             <h2>Workflow</h2>
-            <div style="display: flex;">
-                <div class="card" *ngFor="let item of workflow.nodes">
+            <div style="display: flex;" *ngIf="workflow.nodes.length > 0; else blankUI">
+                <div class="card" *ngFor="let item of workflow.nodes;let i = index">
                     <h3>{{item.name | titlecase}}</h3>
                     <h4>{{item.content}}</h4>
-                    <h4>{{item.state | titlecase}} <mat-icon [ngClass]="{'pending-icon': item.state === 'pending', 'inprogress-icon': item.state === 'In Progress', 'completed-icon': item.state === 'completed' }" (click)="changeState(item)" matSuffix>check_circle</mat-icon></h4>
+                    <h4>{{item.state | titlecase}} <mat-icon [ngClass]="{'pending-icon': item.state === 'pending', 'inprogress-icon': item.state === 'In Progress', 'completed-icon': item.state === 'completed' }" (click)="changeState(item, i)" matSuffix>check_circle</mat-icon></h4>
                    
                     <button mat-mini-fab  color="primary" (click)="openBottomSheet(item)">
                         <mat-icon>edit</mat-icon>
@@ -30,6 +30,9 @@
                     
                 </div>
             </div>
+            <ng-template #blankUI>
+                <p>We dont have any nodes. Add nodes first</p>
+            </ng-template>
         </div>
     </div>
 </div>

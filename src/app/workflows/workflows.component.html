@@ -24,7 +24,7 @@
                     <mat-icon color="warn" (click)="removeWorkflow(i)" style="cursor: pointer;float: right;font-size: 36px;" matSuffix>delete_forever</mat-icon>
                     <h3>{{item.name | titlecase}}</h3>
                     <h4>{{item.stage | titlecase}} <mat-icon [ngClass]="(item.stage =='pending') ? 'pending-icon':'completed-icon'" (click)="changeState(item)" matSuffix>check_circle</mat-icon></h4>
-                    <button mat-mini-fab  color="primary" (click)="openBottomSheet(item)">
+                    <button mat-mini-fab  color="primary" (click)="editWorkflow(i)">
                         <mat-icon>edit</mat-icon>
                     </button>
                 </div>

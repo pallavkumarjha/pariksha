@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { workflow } from './workflows/workflows.component';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -11,7 +10,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-export var workflowList : workflow;
 
 @Component({
   selector: 'app-root',

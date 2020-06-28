@@ -6,7 +6,7 @@ import { workflow } from '../models/workflow.model';
 import { AppState } from '../app.state';
 import * as WorkflowActions from '../actions/workflow.actions';
 import { Store } from '@ngrx/store';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-new-workflow',
@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./new-workflow.component.scss']
 })
 export class NewWorkflowComponent implements OnInit {
+
+  private sub: any;
   workflow: workflow = {
     isComplete: false,
     name: "t",
@@ -24,10 +26,35 @@ export class NewWorkflowComponent implements OnInit {
   workflowForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
   });
+  workflowIndex: number;
 
-  constructor(private _bottomSheet: MatBottomSheet, private store: Store<AppState>, private router: Router) { }
+  constructor(private _bottomSheet: MatBottomSheet, private store: Store<AppState>, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    let $this = this;
+    this.sub = this.route.params.subscribe(params => {
+      this.workflowIndex = +params['id'];
+      if(!isNaN(+params['id'])){
+        $this.store.select('workflow').subscribe(data => {
+          var wfData = data.filter((ele,index) => {
+            if(index == +params['id'])
+            {
+                return ele;
+            }
+          });
+          if(wfData.length){
+            $this.workflow = {
+              isComplete: wfData[0]["isComplete"],
+              name: wfData[0]["name"],
+              nodes: wfData[0]["nodes"],
+              stage: wfData[0]["stage"]
+            }
+            $this.workflowForm.controls['name'].setValue(wfData[0]["name"]);
+          }
+        });
+      }
+    });
+
   }
 
   openBottomSheet(formValue?): void {
@@ -35,7 +62,6 @@ export class NewWorkflowComponent implements OnInit {
      data: {data: formValue, closeOnNavigation: true}
     });
     bottomSheetRef.afterDismissed().subscribe(data => {
-      console.log("fvvvvvvvvv",formValue);
       if(!formValue){
         this.addNode(data);
       }
@@ -45,13 +71,14 @@ export class NewWorkflowComponent implements OnInit {
     });
   }
 
-  addNode(data){
+  addNode(d){
+    let data = {...d};
     let object = {
       content: data.content,
       name: data.name,
       state: 'pending'
     }
-    this.workflow.nodes.push(object);
+    this.workflow.nodes = [...this.workflow.nodes, object];//.push(object);
   }
 
   editNode(prevdata,newdata){
@@ -63,16 +90,15 @@ export class NewWorkflowComponent implements OnInit {
     });
   }
 
-  changeState(item){
-    console.log(item);
+  changeState(item, index){
       if(item.state == 'pending'){
-        item.state = 'In Progress';
+        this.workflow.nodes[index].state = 'In Progress';
       }
       else if(item.state == 'In Progress'){
-        item.state = 'completed';
+        this.workflow.nodes[index].state = 'completed';
       }
       else if(item.state == 'completed'){
-        item.state = 'pending';
+        this.workflow.nodes[index].state = 'pending';
       }
       this.checkIsComplete();
   }
@@ -93,14 +119,18 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   saveWorkflow(){
-    console.log("workflowwwww",this.workflow);
     let workflow = {
       isComplete:  this.workflow.isComplete,
       name: this.workflowForm.value.name,
       nodes: this.workflow.nodes,
       stage: 'pending'
     }
-    this.store.dispatch(new WorkflowActions.AddWorkflow(workflow));
+    if(!isNaN(this.workflowIndex)){
+      this.store.dispatch(new WorkflowActions.EditWorkflow({payload: workflow, index: this.workflowIndex }));
+    }
+    else{
+      this.store.dispatch(new WorkflowActions.AddWorkflow(workflow));
+    }
     this.router.navigate([`workflow`]);
   }
 }
@@ -117,7 +147,6 @@ export class formBottomSheet {
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
     ) {
       if(data.data){
-        console.log(data);
         this.nodeForm.controls['name'].setValue(data.data.name);
         this.nodeForm.controls['content'].setValue(data.data.content);
       }
