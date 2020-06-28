@@ -10,7 +10,7 @@
                 </form>
             </div>
             <div>
-                <button mat-raised-button color="primary" class="header-button" *ngIf="workflow.isComplete">Shuffle</button>
+                <button mat-raised-button color="primary" class="header-button" *ngIf="workflow.isComplete || false">Shuffle</button>
                 <button mat-raised-button color="primary" class="header-button" (click)="deleteNode()">Delete</button>
                 <button mat-raised-button color="primary" class="header-button" (click)="openBottomSheet()"> + Add Node</button>
                 <button mat-raised-button color="primary" class="header-button" (click)="saveWorkflow()">Save</button>
@@ -26,7 +26,7 @@
                    
                     <button mat-mini-fab  color="primary" (click)="openBottomSheet(item)">
                         <mat-icon>edit</mat-icon>
-                      </button>
+                    </button>
                     
                 </div>
             </div>

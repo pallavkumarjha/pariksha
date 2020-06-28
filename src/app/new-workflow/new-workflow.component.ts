@@ -2,6 +2,11 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatBottomSheetRef, MatBottomSheet, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from '../login/login.component';
+import { workflow } from '../models/workflow.model';
+import { AppState } from '../app.state';
+import * as WorkflowActions from '../actions/workflow.actions';
+import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-workflow',
@@ -9,34 +14,18 @@ import { MyErrorStateMatcher } from '../login/login.component';
   styleUrls: ['./new-workflow.component.scss']
 })
 export class NewWorkflowComponent implements OnInit {
-
   workflow: workflow = {
-    nodes: [
-      {
-        content: "Some Content",
-        name: "first node",
-        state: 'pending'
-      },
-      {
-        content: "Some Content",
-        name: "second node",
-        state: 'pending'
-      },
-      {
-        content: "Some Content",
-        name: "third node",
-        state: 'pending'
-      }
-    ],
     isComplete: false,
-    name: "Workflow 1"
+    name: "t",
+    nodes: [],
+    stage: 'ts'
   };
 
   workflowForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
   });
 
-  constructor(private _bottomSheet: MatBottomSheet) { }
+  constructor(private _bottomSheet: MatBottomSheet, private store: Store<AppState>, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -75,6 +64,7 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   changeState(item){
+    console.log(item);
       if(item.state == 'pending'){
         item.state = 'In Progress';
       }
@@ -103,7 +93,15 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   saveWorkflow(){
-    console.log();
+    console.log("workflowwwww",this.workflow);
+    let workflow = {
+      isComplete:  this.workflow.isComplete,
+      name: this.workflowForm.value.name,
+      nodes: this.workflow.nodes,
+      stage: 'pending'
+    }
+    this.store.dispatch(new WorkflowActions.AddWorkflow(workflow));
+    this.router.navigate([`workflow`]);
   }
 }
 
@@ -133,17 +131,4 @@ export class formBottomSheet {
   nodeFormSubmit(form){
     this._bottomSheetRef.dismiss(form);
   }
-}
-
-
-export interface nodes {
-  name: string;
-  content: string;
-  state: string;
-}
-
-export interface workflow {
-  nodes: nodes[];
-  isComplete: boolean;
-  name: string;
 }

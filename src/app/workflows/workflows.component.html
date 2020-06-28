@@ -20,11 +20,13 @@
         <div class="workflows">
             <h2>Workflow list</h2>
             <div style="display: flex;">
-                <div class="card" *ngFor="let item of workflows">
-                    <mat-icon color="warn" (click)="removeWorkflow(item)" style="cursor: pointer;float: right;font-size: 36px;" matSuffix>delete_forever</mat-icon>
+                <div class="card" *ngFor="let item of workflows | async; let i = index">
+                    <mat-icon color="warn" (click)="removeWorkflow(i)" style="cursor: pointer;float: right;font-size: 36px;" matSuffix>delete_forever</mat-icon>
                     <h3>{{item.name | titlecase}}</h3>
                     <h4>{{item.stage | titlecase}} <mat-icon [ngClass]="(item.stage =='pending') ? 'pending-icon':'completed-icon'" (click)="changeState(item)" matSuffix>check_circle</mat-icon></h4>
-                    <mat-hint>Click on button to change status </mat-hint>
+                    <button mat-mini-fab  color="primary" (click)="openBottomSheet(item)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
                 </div>
             </div>
         </div>

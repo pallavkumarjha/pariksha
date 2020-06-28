@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { workflow } from '../models/workflow.model';
+import { AppState } from '../app.state';
+import * as WorkFlowActions from '../actions/workflow.actions';
 
 @Component({
   selector: 'app-workflows',
@@ -8,25 +13,11 @@ import { Router } from '@angular/router';
 })
 export class WorkflowsComponent implements OnInit {
 
-  workflows: workflow[] = [
-    {
-      name: "Workflow 1",
-      stage: "pending",
-      canBeCompleted: false
-    },
-    {
-      name: "Workflow 2",
-      stage: "completed",
-      canBeCompleted: false
-    },
-    {
-      name: "Workflow 3",
-      stage: "completed",
-      canBeCompleted: true
-    }
-  ];
+  workflows: Observable<workflow[]>;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private store: Store<AppState>) {
+    this.workflows = store.select('workflow');
+   }
 
   ngOnInit(): void {
   }
@@ -49,16 +40,16 @@ export class WorkflowsComponent implements OnInit {
     this.router.navigate([`add-workflow`]);
   }
 
-  removeWorkflow(item){
-    this.workflows = this.workflows.filter(element => {
-      return element.name != item.name;
-    })
+  removeWorkflow(index){
+    console.log(index);
+    this.store.dispatch(new WorkFlowActions.RemoveWorkflow(index));
+
   }
 
 }
 
-export interface workflow {
-  name: string;
-  stage: string;
-  canBeCompleted: boolean;
-}
+// export interface workflow {
+//   name: string;
+//   stage: string;
+//   canBeCompleted: boolean;
+// }

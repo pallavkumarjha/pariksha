@@ -16,6 +16,8 @@ import {MatSelectModule} from '@angular/material/select';
 import { NewWorkflowComponent } from './new-workflow/new-workflow.component';
 import { formBottomSheet } from './new-workflow/new-workflow.component';
 import {MatBottomSheetModule, MAT_BOTTOM_SHEET_DEFAULT_OPTIONS} from '@angular/material/bottom-sheet';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from './reducers/workflow.reducer';
 
 
 @NgModule({
@@ -39,6 +41,9 @@ import {MatBottomSheetModule, MAT_BOTTOM_SHEET_DEFAULT_OPTIONS} from '@angular/m
     MatFormFieldModule,
     MatSelectModule,
     MatBottomSheetModule,
+    StoreModule.forRoot({
+      workflow: reducer
+    })
     
   ],
   providers: [ {
