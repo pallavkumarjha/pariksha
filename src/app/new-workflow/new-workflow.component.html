@@ -1,0 +1,35 @@
+<div class="workflow">
+    <div class="container">
+        <div class="workflow-header" style="display: flex;justify-content: space-between;">
+            <div>
+                <form [formGroup]="workflowForm" class="example-form">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Workflow</mat-label>
+                        <input matInput formControlName="name" placeholder="Placeholder">
+                    </mat-form-field>
+                </form>
+            </div>
+            <div>
+                <button mat-raised-button color="primary" class="header-button" *ngIf="workflow.isComplete">Shuffle</button>
+                <button mat-raised-button color="primary" class="header-button" (click)="deleteNode()">Delete</button>
+                <button mat-raised-button color="primary" class="header-button" (click)="openBottomSheet()"> + Add Node</button>
+                <button mat-raised-button color="primary" class="header-button" (click)="saveWorkflow()">Save</button>
+            </div>
+        </div>
+        <div class="workflows">
+            <h2>Workflow</h2>
+            <div style="display: flex;">
+                <div class="card" *ngFor="let item of workflow.nodes">
+                    <h3>{{item.name | titlecase}}</h3>
+                    <h4>{{item.content}}</h4>
+                    <h4>{{item.state | titlecase}} <mat-icon [ngClass]="{'pending-icon': item.state === 'pending', 'inprogress-icon': item.state === 'In Progress', 'completed-icon': item.state === 'completed' }" (click)="changeState(item)" matSuffix>check_circle</mat-icon></h4>
+                   
+                    <button mat-mini-fab  color="primary" (click)="openBottomSheet(item)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

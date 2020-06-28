@@ -1,0 +1,19 @@
+
+<div>
+  <form [formGroup]="nodeForm" class="example-form" (ngSubmit)="nodeFormSubmit(nodeForm.value)">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Name" formControlName="name" [errorStateMatcher]="matcher">
+      <mat-error *ngIf="nodeForm.get('name').hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width" style="margin-top: 5px;">
+      <input matInput placeholder="Content" formControlName="content" [errorStateMatcher]="matcher">
+      <mat-error *ngIf="nodeForm.get('content').hasError('required')">
+        Content is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <button type="submit" class="submit-button" id="submit" mat-raised-button color="primary">Submit</button>
+  </form>
+</div>
