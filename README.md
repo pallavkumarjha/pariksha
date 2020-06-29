@@ -17,7 +17,6 @@ Start this project using "npm start".
 
 1. Login through any emailID and password . There is no validation on the same.
 2. App to be run in production mode.
-3. There is a dummy workflow created when the app starts.
 
 ## Functionalites 
 
