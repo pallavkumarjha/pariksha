@@ -4,8 +4,8 @@
             <div>
                 <form [formGroup]="workflowForm" class="example-form">
                     <mat-form-field appearance="outline">
-                        <mat-label>Workflow</mat-label>
-                        <input matInput formControlName="name" placeholder="Placeholder">
+                        <mat-label>Workflow Name</mat-label>
+                        <input matInput formControlName="name" placeholder="Workflow Name">
                     </mat-form-field>
                 </form>
             </div>
@@ -13,9 +13,9 @@
                 <ng-template *ngIf="workflow">
                     <button mat-raised-button color="primary" class="header-button" *ngIf="workflow.isComplete || false">Shuffle</button>
                 </ng-template>
-                <button mat-raised-button color="primary" class="header-button" (click)="deleteNode()">Delete</button>
+                <button mat-raised-button color="primary" class="header-button"  *ngIf="workflow.nodes.length" (click)="deleteNode()">Delete</button>
                 <button mat-raised-button color="primary" class="header-button" (click)="openBottomSheet()"> + Add Node</button>
-                <button mat-raised-button color="primary" class="header-button" (click)="saveWorkflow()">Save</button>
+                <button mat-raised-button color="primary" class="header-button"  *ngIf="workflow.nodes.length" (click)="saveWorkflow()">Save</button>
             </div>
         </div>
         <div class="workflows">

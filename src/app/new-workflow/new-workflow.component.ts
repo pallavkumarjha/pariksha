@@ -121,20 +121,29 @@ export class NewWorkflowComponent implements OnInit {
     }
     else{
       if(item["state"] == 'pending'){
-        console.log("temppppp",item);
         temp[index].state = 'In Progress';
-        console.log("temppppp",temp[index]);
       }
-      else if(temp[index]["state"] == 'In Progress'){
+      else if(item["state"] == 'In Progress'){
         temp[index]["state"] = 'completed';
       }
-      else if(temp[index]["state"] == 'completed'){
+      else if(item["state"] == 'completed'){
         temp[index]["state"] = 'pending';
       }
       this.checkIsComplete();
     }
     this.workflow.nodes = [...temp];
+    this.processAfterNodes(index);
      
+  }
+
+  processAfterNodes(index){
+    let da = [...this.workflow.nodes];
+    da.forEach((ele,i) => {
+      if(i > index){
+        ele["state"] = 'pending';
+      }
+    });
+    this.workflow.nodes = [...da];
   }
 
   checkIsComplete(){
@@ -159,13 +168,15 @@ export class NewWorkflowComponent implements OnInit {
       nodes: this.workflow.nodes,
       stage: 'pending'
     }
-    if(!isNaN(this.workflowIndex)){
-      this.store.dispatch(new WorkflowActions.EditWorkflow({payload: workflow, index: this.workflowIndex }));
+    if(this.workflowForm.value.name){
+      if(!isNaN(this.workflowIndex)){
+        this.store.dispatch(new WorkflowActions.EditWorkflow({payload: workflow, index: this.workflowIndex }));
+      }
+      else{
+        this.store.dispatch(new WorkflowActions.AddWorkflow(workflow));
+      }
+      this.router.navigate([`workflow`]);
     }
-    else{
-      this.store.dispatch(new WorkflowActions.AddWorkflow(workflow));
-    }
-    this.router.navigate([`workflow`]);
   }
 }
 
