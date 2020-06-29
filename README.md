@@ -5,9 +5,9 @@ Start this project using "npm start".
 
 ## Dependency 
 
-1.Angular material<br />
-2.Firebase,<br />
-3.ngrx<br />
+1. Angular material<br />
+2. Firebase<br />
+3. ngrx<br />
 
 ## Learning outcomes
 
