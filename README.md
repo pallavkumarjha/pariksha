@@ -30,6 +30,7 @@ Start this project using "npm start".
 	b. If a previous node is marked anything but complete after they are completed, the nodes ahead of it will be marked as pending automatically.
 6. Status of the workflow can only be changed if all nodes are complete. (Status of the workflow is not saved after you toggle it. By default it will be in pending state)
 7. The project has been hosted on "https://pariksha-pro.web.app/" but the development version is hosted here.
+8. Workflows can be searched by name and filtered on the basis of stage.
 
 ## Valiations
 

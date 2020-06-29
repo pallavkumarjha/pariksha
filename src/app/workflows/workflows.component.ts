@@ -95,4 +95,13 @@ export class WorkflowsComponent implements OnInit {
       }
     });
   }
+
+  clearFilter(){
+    this.searchForm.reset();
+    let data = {
+      search: null,
+      filter: null
+    }
+    this.searchSubmit(data);
+  }
 }

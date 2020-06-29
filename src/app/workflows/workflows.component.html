@@ -16,13 +16,14 @@
                         </mat-select>
                     </mat-form-field>
                     <button type="submit" mat-raised-button color="warn">Apply</button>
+                    <mat-icon matSuffix (click)="clearFilter()" style="vertical-align: middle;margin-left: 10px;cursor: pointer;">close</mat-icon>
                 </form>
             </div>
             <button mat-raised-button color="primary" (click)="addWorkflow()" style="height: 50px;"> + Create Workflow</button>
         </div>
         <div class="workflows">
             <h2>Workflow list</h2>
-            <div *ngIf="workflows">
+            <div *ngIf="workflows.length;else blankUI">
                 <div class="card" *ngFor="let item of workflows; let i = index">
                     <mat-icon color="warn" (click)="removeWorkflow(i)" style="cursor: pointer;float: right;font-size: 36px;" matSuffix>delete_forever</mat-icon>
                     <h3>{{item.name | titlecase}}</h3>
@@ -32,6 +33,9 @@
                     </button>
                 </div>
             </div>
+            <ng-template #blankUI>
+                <p>We dont have any workflows yet. Add  first</p>
+            </ng-template>
         </div>
     </div>
 </div>

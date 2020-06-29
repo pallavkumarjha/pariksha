@@ -121,7 +121,7 @@ export class NewWorkflowComponent implements OnInit {
     }
     else{
       if(item["state"] == 'pending'){
-        temp[index].state = 'In Progress';
+        temp[index]["state"] = 'In Progress';
       }
       else if(item["state"] == 'In Progress'){
         temp[index]["state"] = 'completed';
