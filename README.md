@@ -5,9 +5,9 @@ Start this project using "npm start".
 
 ## Dependency 
 
-1.Angular material
-2.firebase
-3.ngrx
+Angular material
+firebase
+ngrx
 
 ## Learning outcomes
 
@@ -15,7 +15,7 @@ Start this project using "npm start".
 
 ## Key Points
 
-1. Login through any emailID and password . There is no validation on the same.
+1. Login through any email ID and password . There is no validation on the same.
 2. App to be run in production mode.
 
 ## Functionalites 
@@ -31,7 +31,7 @@ Start this project using "npm start".
 7. The project has been hosted on "https://pariksha-pro.web.app/" but the development version is hosted here.
 8. Workflows can be searched by name and filtered on the basis of stage.
 
-## Valiations
+## Validations
 
 1. Nodes cannot be empty
 2. Login Information cannot be empty
